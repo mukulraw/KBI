@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -19,6 +21,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private WebView myWebView;
     private WebSettings webSettings;
     private ProgressBar progress;
-
+    private ImageView image;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -37,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED , WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED , WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        image = (ImageView)findViewById(R.id.image);
         progress = (ProgressBar)findViewById(R.id.progress);
 
         onNewIntent(getIntent());
@@ -51,37 +54,32 @@ public class MainActivity extends AppCompatActivity {
 
         webSettings.setJavaScriptEnabled(true);
 
+        myWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        myWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        myWebView.getSettings().setAppCacheEnabled(true);
+        myWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setSavePassword(true);
+        webSettings.setSaveFormData(true);
+        webSettings.setEnableSmoothTransition(true);
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
-        //webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        myWebView.setLayerType(View.LAYER_TYPE_HARDWARE , null);
-       // webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-
-
-   /*     myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.getSettings().setLoadWithOverviewMode(true);
-        myWebView.getSettings().setUseWideViewPort(true);
-        myWebView.getSettings().setBuiltInZoomControls(true);
-        myWebView.getSettings().setSupportZoom(true);
-        myWebView.getSettings().setDisplayZoomControls(false);
-        myWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        myWebView.setLayerType(View.LAYER_TYPE_HARDWARE , null);
-*/
 
 
 
 
-        //override the web client to open all links in the same webview
-        myWebView.setWebViewClient(new MyWebViewClient());
-        myWebView.setWebChromeClient(new MyWebChromeClient());
-
-
-        myWebView.addJavascriptInterface(new JavaScriptInterface(), "Android");
 
         //load the home page URL
         myWebView.loadUrl("http://kbibazaar.com/tbx/");
+        myWebView.setWebViewClient(new MyWebViewClient());
+        myWebView.setWebChromeClient(new MyWebChromeClient());
+        Animation anim = AnimationUtils.loadAnimation(getApplicationContext() , R.anim.fade_in);
+        image.startAnimation(anim);
+
+
 
     }
 
@@ -120,8 +118,33 @@ public class MainActivity extends AppCompatActivity {
             super.onProgressChanged(view, newProgress);
             progress.setProgress(newProgress);
 
-            if (newProgress<100)
+            progress.setVisibility(View.VISIBLE);
+
+
+
+
+
+
+
+
+
+
+            if (newProgress > 18)
             {
+
+                image.animate().translationY(image.getHeight()).alpha(0.0f);
+                image.setVisibility(View.GONE);
+
+
+
+
+                myWebView.setVisibility(View.VISIBLE);
+                //progress.setVisibility(View.VISIBLE);
+            }
+
+            if (newProgress<100  && newProgress>18)
+            {
+                Log.d("asasd" , String.valueOf(newProgress));
                 progress.setVisibility(View.VISIBLE);
 
 
@@ -130,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 progress.setVisibility(View.GONE);
             }
+
 
 
         }

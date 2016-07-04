@@ -4,23 +4,23 @@
     package="com.kbibazaar.kbi">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    android:hardwareAccelerated="true"
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher1"
         android:label="@string/app_name"
-        android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:ignore="AllowBackup">
         <activity android:name=".MainActivity"
-            android:hardwareAccelerated="true"
-            >
 
-            <!--
- ATTENTION: This intent was auto-generated. Follow instructions at
-  https://g.co/AppIndexing/AndroidStudio to publish your URLs.
-            -->
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -34,14 +34,6 @@
                     android:host="www.kbibazaar.com"
                     android:pathPrefix="/"
                     android:scheme="http" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".Splash">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
